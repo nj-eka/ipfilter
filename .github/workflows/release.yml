@@ -2,9 +2,8 @@ name: CMake RELEASE
 
 on:
   push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+    tags:
+      - 'v*.*.*'
 
 permissions: write-all
 
@@ -52,17 +51,30 @@ jobs:
     - run: git describe --tags --dirty
     - run: echo "💡 The ${{ github.repository }} repository has been cloned to the runner."  
   
+    - name: set env RELEASE_VERSION
+      run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
+
+    - name: print RELEASE_VERSION
+      run: |
+        echo $RELEASE_VERSION
+        echo ${{ env.RELEASE_VERSION }}
+
     - name: Configure CMake
       # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
       # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
       run: |
         cmake -B ${{github.workspace}}/build -S ${{github.workspace}} \
+          -DRELEASE_VERSION=${{env.RELEASE_VERSION}} \
+          -DPACKAGE=DEB \
           -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} \
           -DBUILD_TESTING=ON \
           -DENABLE_COVERAGE=ON \
           -DCMAKE_CXX_FLAGS="-g -O0 -fsanitize=undefined -fsanitize=address -fsanitize=leak -fno-omit-frame-pointer"
 
     - name: Build
+      run: sudo cmake --build ${{github.workspace}}/build
+    
+    - name: Install
       run: sudo cmake --build ${{github.workspace}}/build --target install
 
     - name: Run unit tests
@@ -81,5 +93,30 @@ jobs:
       run: |
         chmod +x ./test.sh
         ./test.sh
+
+    - name: Generate package
+      run: cmake --build ${{github.workspace}}/build --target package
+
+    - name: Create Release (DEB)
+      id: create_release_deb
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{env.RELEASE_VERSION}}
+        release_name: Release ${{env.RELEASE_VERSION}}
+        draft: false
+        prerelease: false
+
+    - name: Upload Release (DEB) Asset
+      id: upload-release-asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release_deb.outputs.upload_url }}
+        asset_path: ${{github.workspace}}/build/ipfilter-${{env.RELEASE_VERSION}}-Linux.deb
+        asset_name: ipfilter_${{ env.PS_VERSION_MAJOR}}.${{ env.PS_VERSION_MINOR}}.${{ env.PS_VERSION_PATCH}}-${{runner.os}}.deb
+        asset_content_type: application/vnd.debian.binary-package
 
     - run: echo "🍏 This job's status is ${{ job.status }}."
