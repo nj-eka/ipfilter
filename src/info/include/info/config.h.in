@@ -1,0 +1,15 @@
+#pragma once
+
+namespace info {
+
+constexpr const char* PROJECT_AUTHOR = @GIT_DESCRIBE_PROJECT_AUTHOR@;
+constexpr const char* PROJECT_REPOSITORY_URL = "@GIT_DESCRIBE_PROJECT_REPOSITORY_URL@";
+constexpr const char* PROJECT_REPOSITORY_BRANCH = "@GIT_DESCRIBE_PROJECT_REPOSITORY_BRANCH@";
+
+constexpr const char* PROJECT_REVISION            = @GIT_DESCRIBE_PROJECT_REVISION@;
+constexpr const char* PROJECT_REVISION_DATETIME   = @GIT_DESCRIBE_PROJECT_REVISION_DATETIME@;
+constexpr const char* PROJECT_REVISION_HISTORY    = R"(@GIT_DESCRIBE_PROJECT_REVISION_HISTORY@)";
+
+constexpr const char* PROJECT_VERSION             = "@GIT_DESCRIBE_PROJECT_VERSION_ASIS@";
+
+} // namespace info
