@@ -115,8 +115,8 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release_deb.outputs.upload_url }}
-        asset_path: ${{github.workspace}}/build/ipfilter-${{env.RELEASE_VERSION}}-Linux.deb
-        asset_name: ipfilter_${{ env.PS_VERSION_MAJOR}}.${{ env.PS_VERSION_MINOR}}.${{ env.PS_VERSION_PATCH}}-${{runner.os}}.deb
+        asset_path: ${{github.workspace}}/build/ipfilter-${{env.RELEASE_VERSION}}-${{runner.os}}.deb
+        asset_name: ipfilter-${{env.RELEASE_VERSION}}-${{runner.os}}.deb
         asset_content_type: application/vnd.debian.binary-package
 
     - run: echo "🍏 This job's status is ${{ job.status }}."
