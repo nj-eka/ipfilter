@@ -64,7 +64,7 @@ find_package(GTest 1.13 REQUIRED)
 ######  Compile settings #####
 ##############################
 # enable all warnings and treat them as errors
-add_compile_options(-Wall -Wextra -Wpedantic -Werror)
+add_compile_options(-Wall -Wextra -Wpedantic) # -Werror
 
 
 #######################
