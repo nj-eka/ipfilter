@@ -48,24 +48,17 @@ Usage:
   -c [ --counts ] arg (=1000) Initial size to reserve
 
 > ip_filter --version
-v0.0.3-2-g22dd7fd
+v0.0.1-4-g2b6be48
 
 > ip_filter --info
 author: JN <70240447+nj-eka@users.noreply.github.com>
 url: https://github.com/nj-eka/ipfilter.git
-branch: heads/v0.0.3
-rev: 22dd7fd
-rev date: 2023.07.25-10:30
-rev hist: Sun Jul 23 01:04:56 2023 +0300         JN      refs/heads/main
-Sat Jul 22 19:11:16 2023 +0300   JN      refs/heads/v0.0.2
-Tue Jul 25 10:30:58 2023 +0300   JN      refs/heads/v0.0.3
-Tue Jul 25 10:30:58 2023 +0300   JN      refs/remotes/origin/HEAD
-Tue Jul 25 10:30:58 2023 +0300   JN      refs/remotes/origin/main
-Sun Jul 16 22:10:16 2023 +0300   Jack New        refs/remotes/origin/v0.0.1
-Sat Jul 22 09:59:42 2023 +0300   Jack New        refs/remotes/origin/v0.0.2
-Tue Jul 25 10:26:32 2023 +0300   Jack New        refs/remotes/origin/v0.0.3
+branch: main
+rev: 2b6be48
+rev date: 2023.07.26-17:04
+rev hist: Wed Jul 26 17:04:40 2023 +0300         JN      refs/heads/main
+Wed Jul 26 17:04:40 2023 +0300   JN      refs/remotes/origin/main
                  refs/tags/v0.0.1
-                 refs/tags/v0.0.3
 
 > cat tests/ip_filter.tsv | ip_filter | md5sum
 24e7a7b2270daee89c64d3ca5fb3da1a -
@@ -75,5 +68,4 @@ Tue Jul 25 10:26:32 2023 +0300   Jack New        refs/remotes/origin/v0.0.3
 
 > ip_filter --input=tests/ip_filter.tsv --counts=`wc -l tests/ip_filter.tsv`  | md5sum
 24e7a7b2270daee89c64d3ca5fb3da1a -
-
 ```
