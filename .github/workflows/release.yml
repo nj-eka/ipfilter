@@ -63,7 +63,7 @@ jobs:
           -DCMAKE_CXX_FLAGS="-g -O0 -fsanitize=undefined -fsanitize=address -fsanitize=leak -fno-omit-frame-pointer"
 
     - name: Build
-      run: cmake --build ${{github.workspace}}/build --target install
+      run: sudo cmake --build ${{github.workspace}}/build --target install
 
     - name: Test
       working-directory: ${{github.workspace}}/build
