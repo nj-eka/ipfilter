@@ -9,6 +9,14 @@ jobs:
         env:
           GITHUB_CONTEXT: ${{ toJson(github) }}
         run: echo '$GITHUB_CONTEXT'
+
+      - name: Check revision_name
+        env:
+          RELEASE_VERSION: ${{ github.ref_name }}
+        run: |
+          echo $RELEASE_VERSION
+          echo ${{ github.ref_name }}
+        
       - name: Dump job context
         env:
           JOB_CONTEXT: ${{ toJson(job) }}
