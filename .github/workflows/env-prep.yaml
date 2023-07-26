@@ -25,12 +25,12 @@ jobs:
         run: gcc -v
       - name: init cmake version
         run: cmake --version
-      - name: get-cmake
-        uses: lukka/get-cmake@v3.26.4
-        with:
-          # Optional CMake version, expressed with the semantic version syntax, e.g. '~3.25.0' for the most recent 3.25.x, `ˆ3.25.0` for the most recent 3.x version, or a specific version `3.25.2'. Or `latest` or `latestrc` for the latest stable or release candidate version. If not specified the `latest` is installed.
-          cmakeVersion: latest
-          ninjaVersion: latest
-      - name: latest cmake version
-        run: cmake --version
+    #   - name: get-cmake
+    #     uses: lukka/get-cmake@v3.26.4
+    #     with:
+    #       # Optional CMake version, expressed with the semantic version syntax, e.g. '~3.25.0' for the most recent 3.25.x, `ˆ3.25.0` for the most recent 3.x version, or a specific version `3.25.2'. Or `latest` or `latestrc` for the latest stable or release candidate version. If not specified the `latest` is installed.
+    #       cmakeVersion: latest
+    #       ninjaVersion: latest
+    #   - name: latest cmake version
+    #     run: cmake --version
       - run: echo "🍏 This job's status is ${{ job.status }}."
