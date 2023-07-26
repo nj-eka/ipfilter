@@ -6,6 +6,8 @@ on:
   pull_request:
     branches: [ "main" ]
 
+permissions: read-all|write-all
+
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
   BUILD_TYPE: Release
@@ -33,9 +35,9 @@ jobs:
       run: gcc -v
     - name: Check out repository code
       uses: actions/checkout@v3
-        with:
-          clean: false
-          fetch-depth: 0
+      with:
+        clean: false
+        fetch-depth: 0
     - run: git describe --tags --dirty
     - run: echo "💡 The ${{ github.repository }} repository has been cloned to the runner."    
   
