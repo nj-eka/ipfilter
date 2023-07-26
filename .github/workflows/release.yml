@@ -95,7 +95,7 @@ jobs:
         ./test.sh
 
     - name: Generate package
-      run: cmake --build ${{github.workspace}}/build --target package
+      run: sudo cmake --build ${{github.workspace}}/build --target package
 
     - name: Create Release (DEB)
       id: create_release_deb
