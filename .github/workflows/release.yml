@@ -40,6 +40,9 @@ jobs:
     - name: Install Boost Components
       run: sudo apt-get install libboost-program-options-dev -y
       
+    - name: Install gcovr
+      run: sudo apt-get -y install gcovr
+      
     - name: Check out repository code
       uses: actions/checkout@v3
       with:
