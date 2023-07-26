@@ -11,7 +11,7 @@ course c++ developer hw2
 
 # config example
 > cmake -B ./build -S . \
-    -DCMAKE_BUILD_TYPE=Debug  
+    -DCMAKE_BUILD_TYPE=Debug \
     -DBUILD_TESTING=ON \
     -DENABLE_COVERAGE=ON \
     -DCMAKE_CXX_FLAGS="-g -O0 -fsanitize=undefined -fsanitize=address -fsanitize=leak -fno-omit-frame-pointer"
