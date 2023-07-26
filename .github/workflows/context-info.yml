@@ -1,5 +1,8 @@
 name: Context testing
-on: push
+on: 
+  push:
+    tags:
+      - 'v*.*.*'
 
 jobs:
   dump_contexts_to_log:
@@ -9,18 +12,12 @@ jobs:
         env:
           GITHUB_CONTEXT: ${{ toJson(github) }}
         run: echo '$GITHUB_CONTEXT'
-      - name: Set RELEASE_VERSION
+      - name: set env RELEASE_VERSION
         run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
-      - name: Print RELEASE_VERSION
+      - name: print RELEASE_VERSION
         run: |
           echo $RELEASE_VERSION
           echo ${{ env.RELEASE_VERSION }}
-#       - name: Check revision_name
-#         env:
-#           RELEASE_VERSION: ${{ github.ref_name }}
-#         run: |
-#           echo $RELEASE_VERSION
-#           echo ${{ github.ref_name }}
       - name: Dump job context
         env:
           JOB_CONTEXT: ${{ toJson(job) }}
