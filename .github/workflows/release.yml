@@ -103,7 +103,7 @@ jobs:
 
     - name: Generate package
       run: |
-        cmake --build ${{github.workspace}}/build --target package | tee cpack_report
+        sudo cmake --build ${{github.workspace}}/build --target package | tee cpack_report
         echo "PACKAGE_ABSOLUTE_NAME=`cat cpack_report | awk 'END{print}' | sed 's/.*- package: \(.*\) generated.$/\1/'`" >> $GITHUB_ENV
         echo "PACKAGE_BASE_NAME=`basename $PACKAGE_ABSOLUTE_NAME`" >> $GITHUB_ENV
 
