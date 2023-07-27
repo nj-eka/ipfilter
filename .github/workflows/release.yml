@@ -81,9 +81,6 @@ jobs:
     - name: Build
       run: sudo cmake --build "${{github.workspace}}/build"
     
-    - name: Install
-      run: sudo cmake --build "${{github.workspace}}/build" --target install
-
     - name: Run unit tests
       working-directory: ${{github.workspace}}/build
       # Execute tests defined by the CMake configuration.
@@ -94,7 +91,10 @@ jobs:
     - name: Test Coverage report
       working-directory: "${{github.workspace}}/build"
       run: ctest -T Coverage
-      
+
+    - name: Install
+      run: sudo cmake --build "${{github.workspace}}/build" --target install
+
     - name: Run integration test
       working-directory: "${{github.workspace}}/tests"
       run: |
@@ -105,7 +105,9 @@ jobs:
       run: |
         sudo cmake --build ${{github.workspace}}/build --target package | tee cpack_report
         echo "PACKAGE_ABSOLUTE_NAME=`cat cpack_report | awk 'END{print}' | sed 's/.*- package: \(.*\) generated.$/\1/'`" >> $GITHUB_ENV
-        echo "PACKAGE_BASE_NAME=`basename $PACKAGE_ABSOLUTE_NAME`" >> $GITHUB_ENV
+
+    - name: Extract package name
+      run: echo "PACKAGE_BASE_NAME=`basename $PACKAGE_ABSOLUTE_NAME`" >> $GITHUB_ENV        
 
     - name: Create Release
       id: create_release
