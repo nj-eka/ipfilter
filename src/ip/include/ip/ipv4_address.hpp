@@ -53,11 +53,11 @@ public:
   // ipv4_address &operator=(ipv4_address &&) noexcept = default;
 
   // convertions
-  [[nodiscard]] constexpr uint_t as_uint() const noexcept { return m_in_addr.u_addr; }
-  [[nodiscard]] constexpr bytes_t as_bytes() const noexcept {
+  constexpr uint_t as_uint() const noexcept { return m_in_addr.u_addr; }
+  constexpr bytes_t as_bytes() const noexcept {
     return bytes_t{m_in_addr.octet.a, m_in_addr.octet.b, m_in_addr.octet.c, m_in_addr.octet.d};
   }
-  [[nodiscard]] std::string as_string() const noexcept {
+  constexpr std::string as_string() const noexcept {
     return std::format("{}.{}.{}.{}", m_in_addr.octet.a, m_in_addr.octet.b, m_in_addr.octet.c,
                        m_in_addr.octet.d); // to cache or not to cache...
   }

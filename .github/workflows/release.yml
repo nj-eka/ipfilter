@@ -16,7 +16,14 @@ jobs:
     # See: https://docs.github.com/en/free-pro-team@latest/actions/learn-github-actions/managing-complex-workflows#using-a-build-matrix
     runs-on: ubuntu-latest
     permissions: write-all
-    #   packages: write
+    #  packages: write
+    #  contents: write
+    env:
+      PACKAGE: DEB
+      PACKAGE_CONTENT_TYPE: "application/vnd.debian.binary-package"
+      BUILD_TESTING: ON
+      ENABLE_COVERAGE: ON
+      CXX_FLAGS: "-g -O0 -fsanitize=undefined -fsanitize=address -fsanitize=leak -fno-omit-frame-pointer"
 
     steps:
     # pre
@@ -56,8 +63,8 @@ jobs:
 
     - name: print RELEASE_VERSION
       run: |
-        echo $RELEASE_VERSION
-        echo ${{ env.RELEASE_VERSION }}
+        echo $RELEASE_VERSION # test
+        echo ${{ env.RELEASE_VERSION }} # test
 
     - name: Configure CMake
       # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
@@ -65,11 +72,11 @@ jobs:
       run: |
         cmake -B ${{github.workspace}}/build -S ${{github.workspace}} \
           -DRELEASE_VERSION=${{env.RELEASE_VERSION}} \
-          -DPACKAGE=DEB \
+          -DPACKAGE=${{env.PACKAGE}} \
           -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} \
-          -DBUILD_TESTING=ON \
-          -DENABLE_COVERAGE=ON \
-          -DCMAKE_CXX_FLAGS="-g -O0 -fsanitize=undefined -fsanitize=address -fsanitize=leak -fno-omit-frame-pointer"
+          -DBUILD_TESTING=${{env.BUILD_TESTING}} \
+          -DENABLE_COVERAGE=${{env.ENABLE_COVERAGE}} \
+          -DCMAKE_CXX_FLAGS=${{env.CXX_FLAGS}}
 
     - name: Build
       run: sudo cmake --build ${{github.workspace}}/build
@@ -95,10 +102,13 @@ jobs:
         ./test.sh
 
     - name: Generate package
-      run: sudo cmake --build ${{github.workspace}}/build --target package
+      run: |
+        cmake --build ${{github.workspace}}/build --target package | tee cpack_report
+        echo "PACKAGE_ABSOLUTE_NAME=`cat cpack_report | awk "END{print}" | sed "s/.*- package: \(.*\) generated.$/\1/"` >> $GITHUB_ENV
+        echo "PACKAGE_BASE_NAME=`basename $PACKAGE_ABSOLUTE_NAME` >> $GITHUB_ENV
 
-    - name: Create Release (DEB)
-      id: create_release_deb
+    - name: Create Release
+      id: create_release
       uses: actions/create-release@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -114,9 +124,22 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        upload_url: ${{ steps.create_release_deb.outputs.upload_url }}
-        asset_path: ${{github.workspace}}/build/ipfilter-${{env.RELEASE_VERSION}}-${{runner.os}}.deb
-        asset_name: ipfilter-${{env.RELEASE_VERSION}}-${{runner.os}}.deb
-        asset_content_type: application/vnd.debian.binary-package
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        # asset_path: ${{github.workspace}}/build/ipfilter-${{env.RELEASE_VERSION}}-${{runner.os}}.deb
+        asset_path: ${{env.PACKAGE_ABSOLUTE_NAME}}       
+        asset_name: ${{env.PACKAGE_BASE_NAME}}
+        asset_content_type: ${{env.PACKAGE_CONTENT_TYPE}}
+  
+    # - name: Release
+    #   uses: softprops/action-gh-release@v1
+    #   with:
+    #     name: Release ${{env.RELEASE_VERSION}}
+    #     token: ${{ secrets.GITHUB_TOKEN }}
+    #     draft: false
+    #     prerelease: false
+    #     files: |
+    #       Release.txt
+    #       LICENSE
+    #       ...
 
     - run: echo "🍏 This job's status is ${{ job.status }}."

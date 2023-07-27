@@ -21,6 +21,7 @@ TEST(ipv4_filter_test, hw2) {
         __ptr->close();
       delete __ptr;
     };
+    // std::unique_ptr test_file{new std::ifstream(HW2_TEST_FILE), file_deleter};    doesn't work
     std::unique_ptr<std::ifstream, decltype(file_deleter)> test_file{new std::ifstream(HW2_TEST_FILE), file_deleter};
     ASSERT_TRUE(test_file->is_open());
     for (std::string line; std::getline(*test_file, line);) {
