@@ -34,7 +34,7 @@ IP_SHARED_EXPORT void print_all(const container_t &cont, std::ostream &out)
 }
 
 template<Ipv4Iterable container_t, typename compare_t, typename... Args> 
-inline IP_SHARED_EXPORT void print_if(
+IP_SHARED_EXPORT void print_if(
   const container_t &cont, std::ostream &out, compare_t comp, Args &&...args)
 {
   const std::array<ipv4_address::byte_t, sizeof...(Args)> bs = {std::forward<Args>(args)...};
@@ -62,7 +62,7 @@ inline IP_SHARED_EXPORT void print_if(
 }
 
 template <Ipv4Iterable container_t, typename... Args> 
-inline IP_SHARED_EXPORT void print_if_any(const container_t &cont, std::ostream &out, Args &&...args) 
+IP_SHARED_EXPORT void print_if_any(const container_t &cont, std::ostream &out, Args &&...args) 
 {
   const std::set<ipv4_address::byte_t> sb = {std::forward<Args>(args)...};
   std::copy_if(cont.begin(), cont.end(), 
