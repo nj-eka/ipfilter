@@ -81,7 +81,7 @@ public:
   }
   template <size_t N> ipv4_address& with(std::array<byte_t, N> const &bs) {
     for(size_t i=0; i < N; ++i)
-      this->at(i) = bs[i];
+      at(i) = bs[i];
     return *this;
   }  
 
