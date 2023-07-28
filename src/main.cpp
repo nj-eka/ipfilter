@@ -9,7 +9,8 @@ int main(int argc, char const *argv[]) {
     if (args::info_requested(vm, desc)){
       return EAGAIN;
     }
-    ip::vip_t vip;
+    using vip_t = std::vector<ip::ipv4_address>;
+    vip_t vip;
     vip.reserve(vm["counts"].as<size_t>());
     // ios_base::sync_with_stdio(false);
     {

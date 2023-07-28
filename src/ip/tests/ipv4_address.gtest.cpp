@@ -1,5 +1,6 @@
 #include <arpa/inet.h>
 #include <cstring>
+#include <type_traits>
 #include <gtest/gtest.h>
 
 #include <ip/ipv4_address.hpp>
@@ -7,6 +8,10 @@
 using ip4 = ip::ipv4_address;
 
 TEST(ipv4_address_test, sizeof) { EXPECT_EQ(sizeof(ip4), sizeof(ip4::uint_t)); }
+
+TEST(ipv4_address_test, is_trivial_copyable){
+  std::cout << std::is_trivially_copyable<ip4>::value << std::endl;
+}
 
 TEST(ipv4_address_test, inet_aton_compliance) {
   auto s = "1.2.3.4";

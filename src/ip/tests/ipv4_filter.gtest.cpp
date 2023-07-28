@@ -8,9 +8,11 @@ using ip::operator""_b;
 
 using ip4 = ip::ipv4_address;
 
+using vip_t = std::vector<ip4>;
+
 TEST(ipv4_filter_test, soft_equals) {
-  ip::vip_t vip = {{0, 1, 1, 2}, {1, 1, 0, 0}, {1, 1, 1, 0}, {1, 1, 2, 3}, {1, 2, 3, 4}, {1, 9, 10, 11}};
-  auto comp = std::less<ip::ipv4_address>();
+  vip_t vip = {{0, 1, 1, 2}, {1, 1, 0, 0}, {1, 1, 1, 0}, {1, 1, 2, 3}, {1, 2, 3, 4}, {1, 9, 10, 11}};
+  auto comp = std::less<ip4>();
   {
     std::stringstream ss;
     ip::print_if(vip, ss, comp, 0_b);
@@ -32,7 +34,7 @@ TEST(ipv4_filter_test, soft_equals) {
 }
 
 TEST(ipv4_filter_test, any_of) {
-  ip::vip_t vip = {ip4("0.1.1.1"),     ip4("2.3.4.5"),    ip4("6.7.8.9"),
+  vip_t vip = {ip4("0.1.1.1"),     ip4("2.3.4.5"),    ip4("6.7.8.9"),
                    ip4("10.11.12.13"), ip4("255.0.0.11"), ip4("3.1.0.0")};
 
   {

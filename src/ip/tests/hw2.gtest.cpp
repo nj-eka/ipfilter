@@ -8,6 +8,8 @@
 
 using namespace ip;
 
+using vip_t = std::vector<ipv4_address>;
+
 TEST(ipv4_filter_test, hmd5) {
   ccat::hash::md5 m{"hello world"};
   ASSERT_STREQ(m.hexdigest().c_str(), "5eb63bbbe01eeed093cb22bb8f5acdc3");
@@ -29,7 +31,7 @@ TEST(ipv4_filter_test, hw2) {
     }
   }
   vip.shrink_to_fit();
-  auto comp = std::greater<ip::ipv4_address>();
+  auto comp = std::greater<ipv4_address>();
   std::sort(vip.begin(), vip.end(), comp);
   std::stringstream ss;
   ip::print_all(vip, ss);
