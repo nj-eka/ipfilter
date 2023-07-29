@@ -100,10 +100,33 @@ public:
 
   // soft equals
   template <size_t N> 
-  bool is_soft_equal(std::array<byte_t, N> const &rhs) const noexcept {
-    auto lhs = as_bytes();
-    return std::equal(lhs.cbegin(), lhs.cbegin() + std::min(lhs.size(), N), rhs.cbegin()); // equal is not constexpr
-    //todo: try to solve using bitset ...
+  consteval bool is_soft_equal(std::array<byte_t, N> const &rhs) const noexcept {
+    // // std::equal is not constexpr
+    // auto lhs = as_bytes();
+    // return std::equal(lhs.cbegin(), lhs.cbegin() + std::min(lhs.size(), N), rhs.cbegin());
+
+    // // for(...) is not constexpr
+    // std::bitset<std::numeric_limits<std::uint8_t>::digits * N> lbs, rbs;
+    // for(int i=0; i < N; ++i){
+    //     lbs <<= std::numeric_limits<std::uint8_t>::digits;
+    //     lbs |= rhs[i];
+    // }
+    // rbs = m_in_addr.u_addr >> (std::numeric_limits<uint_t>::digits - lbs.size());
+    // return (lbs == rbs);
+    switch (N){
+      case 0: 
+        return true;
+      case 1:
+        return m_in_addr.octet.a == rhs[0];
+      case 2:
+        return m_in_addr.octet.a == rhs[0] && (m_in_addr.octet.b == rhs[1]);
+      case 3:
+        return m_in_addr.octet.a == rhs[0] && (m_in_addr.octet.b == rhs[1]) && (m_in_addr.octet.c == rhs[2]);
+      case 4:
+        return m_in_addr.u_addr == rhs[0] << 24 | rhs[1] << 16 | rhs[2] << 8 | rhs[3];
+      default:
+        return false; // no throw
+    }
   }
   bool is_equal_any_of(std::set<ip::ipv4_address::byte_t> const &rhs) const noexcept {
     auto bs = as_bytes();
