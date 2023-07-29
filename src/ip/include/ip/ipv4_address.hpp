@@ -47,10 +47,11 @@ public:
   ipv4_address(const std::string_view &s, bool validate);
 
   // defaults
-  // constexpr ipv4_address(const ipv4_address &a) noexcept = default;
+  // constexpr ipv4_address(const ipv4_address &a) noexcept = default;  // -> trivially copyable
   // ipv4_address(ipv4_address &&) noexcept = default;
   // ipv4_address &operator=(const ipv4_address &a) noexcept = default;
   // ipv4_address &operator=(ipv4_address &&) noexcept = default;
+  ipv4_address &operator=(uint_t u) noexcept { m_in_addr.u_addr = u; return *this; }
 
   // convertions
   constexpr uint_t as_uint() const noexcept { return m_in_addr.u_addr; }

@@ -9,8 +9,40 @@ using ip4 = ip::ipv4_address;
 
 TEST(ipv4_address_test, sizeof) { EXPECT_EQ(sizeof(ip4), sizeof(ip4::uint_t)); }
 
-TEST(ipv4_address_test, is_trivial_copyable){
-  std::cout << std::is_trivially_copyable<ip4>::value << std::endl;
+// TEST(ipv4_address_test, is_trivially_constructible_v_uint_t){
+//   EXPECT_TRUE((std::is_trivially_constructible_v<ip4, ip4::uint_t>)) << "isn't trivially_constructible_v<ip4, ip4::uint_t>";
+// }
+
+TEST(ipv4_address_test, is_trivially_constructible_v_ipv4){
+  EXPECT_TRUE((std::is_trivially_constructible_v<ip4, const ip4&>)) << "isn't trivially_constructible_v<ip4, const ip4&>";
+}
+
+TEST(ipv4_address_test, is_nothrow_constructible_v_uint_t){
+  EXPECT_TRUE((std::is_nothrow_constructible_v<ip4, ip4::uint_t>)) << "isn't nothrow_constructible_v<ip4, ipv4::uint_t>";
+}
+
+TEST(ipv4_address_test, is_nothrow_constructible_v_bytes){
+  EXPECT_TRUE((std::is_nothrow_constructible_v<ip4, ip4::bytes_t>)) << "isn't nothrow_constructible_v<ip4, ip4::bytes_t>";
+}
+
+TEST(ipv4_address_test, is_nothrow_constructible_v_byte){
+  EXPECT_TRUE((std::is_nothrow_constructible_v<ip4, ip4::byte_t, ip4::byte_t, ip4::byte_t, ip4::byte_t>)) << "isn't nothrow_constructible_v<ip4, ip4::byte_t, ip4::byte_t, ip4::byte_t, ip4::byte_t>";
+}
+
+TEST(ipv4_address_test, is_convertible_from_uint_t){
+  EXPECT_TRUE((std::is_convertible_v<ip4::uint_t, ip4>)) << "isn't convertible<ip4::uint_t, ip4>";
+}
+
+TEST(ipv4_address_test, is_copy_assignable){
+  EXPECT_TRUE((std::is_copy_assignable_v<ip4>)) << "isn't copy_assignable<ip4>";
+}
+
+TEST(ipv4_address_test, is_move_assignable){
+  EXPECT_TRUE((std::is_move_assignable_v<ip4>)) << "isn't is_move_assignable_v<ip4>";
+}
+
+TEST(ipv4_address_test, is_assignable_uint_t){
+  EXPECT_TRUE((std::is_assignable_v<ip4, ip4::uint_t>)) << "isn't is_assignable_v<ip4, ip4::uint_t>";
 }
 
 TEST(ipv4_address_test, inet_aton_compliance) {
@@ -145,6 +177,28 @@ TEST(ipv4_address_test, octets) {
   c = 1;
   d = 0;
   EXPECT_TRUE(cip == ip4("111.11.1.0"));
+}
+
+TEST(ipv4_address_test, with) {
+  using ip::operator""_b;  
+  std::array<ip4::byte_t, 3> bs = {1_b, 2_b, 3_b};
+  EXPECT_TRUE(ip4("111.111.111.111").with(bs) == ip4("1.2.3.111"));
+}
+
+TEST(ipv4_address_test, lowest) {
+  EXPECT_TRUE(ip4::lowest() == ip4("0.0.0.0"));
+}
+
+TEST(ipv4_address_test, highest) {
+  EXPECT_TRUE(ip4::highest() == ip4("255.255.255.255"));
+}
+
+TEST(ipv4_address_test, range_with) {
+  using ip::operator""_b;  
+  std::array<ip4::byte_t, 3> bs = {1_b, 2_b, 3_b};
+  auto [low, up] = ip4::range_with(bs, std::less{});  
+  EXPECT_TRUE(low == ip4("1.2.3.0"));
+  EXPECT_TRUE(up == ip4("1.2.3.255"));
 }
 
 TEST(ipv4_address_test, print) {
