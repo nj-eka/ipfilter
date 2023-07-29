@@ -87,35 +87,39 @@ public:
   }  
 
   // compares
-  friend constexpr auto operator<=>(const ipv4_address &l, const ipv4_address &r) noexcept {
+  friend 
+  constexpr auto operator<=>(const ipv4_address &l, const ipv4_address &r) noexcept {
     return l.m_in_addr.u_addr <=> r.m_in_addr.u_addr;
   } // for == return error: no match for «operator==» (operand types are «ip4» {aka «ip::ipv4_address»} and «ip4» {aka
     // «ip::ipv4_address»})
   // that's why operator== is added here explicitly
-  friend constexpr bool operator==(const ipv4_address &lhs, const ipv4_address &rhs) noexcept {
+  friend 
+  constexpr bool operator==(const ipv4_address &lhs, const ipv4_address &rhs) noexcept {
     return lhs.m_in_addr.u_addr == rhs.m_in_addr.u_addr;
   }
 
   // soft equals
-  template <size_t N> bool is_soft_equal(std::array<byte_t, N> const &rhs) const noexcept {
+  template <size_t N> 
+  bool is_soft_equal(std::array<byte_t, N> const &rhs) const noexcept {
     auto lhs = as_bytes();
-    return std::equal(lhs.cbegin(), lhs.cbegin() + std::min(lhs.size(), N), rhs.cbegin());
+    return std::equal(lhs.cbegin(), lhs.cbegin() + std::min(lhs.size(), N), rhs.cbegin()); // equal is not constexpr
+    //todo: try to solve using bitset ...
   }
   bool is_equal_any_of(std::set<ip::ipv4_address::byte_t> const &rhs) const noexcept {
     auto bs = as_bytes();
     std::set<ip::ipv4_address::byte_t> lhs(bs.begin(), bs.end());
-    return std::any_of(lhs.begin(), lhs.end(), // = inline bool - no constexpr... )
-                       [&rhs](const auto &b) { return rhs.contains(b); });
+    return std::any_of(lhs.begin(), lhs.end(),
+                       [&rhs](const auto &b) { return rhs.contains(b); }); // any_of is not constexpr
   }
 
-  // friends
-  friend std::ostream &operator<<(std::ostream &sout, const ipv4_address &a) { return sout << a.as_string(); }
+  friend 
+  std::ostream &operator<<(std::ostream &sout, const ipv4_address &a) { return sout << a.as_string(); }
 
-  // statics
   static bool is_valid_format(std::string_view s) noexcept;
-  static constexpr auto lowest() noexcept { return ipv4_address(0); }
-  static constexpr auto highest() noexcept { return ipv4_address(std::numeric_limits<uint_t>::max()); } // = UINT32_MAX
-  template <size_t N, typename compare_t> static auto range_with(std::array<byte_t, N> const &bs, compare_t comp = std::less<ipv4_address>()) {
+  constexpr static auto lowest() noexcept { return ipv4_address(0); }
+  constexpr static auto highest() noexcept { return ipv4_address(std::numeric_limits<uint_t>::max()); } // = UINT32_MAX
+  template <size_t N, typename compare_t> 
+  constexpr static auto range_with(std::array<byte_t, N> const &bs, compare_t comp = std::less<ipv4_address>()) {
     auto low = lowest().with(bs);
     auto up = highest().with(bs);
     if constexpr(comp(lowest(), highest()))
@@ -126,15 +130,15 @@ public:
 
 };
 
-inline IP_SHARED_EXPORT ipv4_address::byte_t operator"" _b(unsigned long long ull) {
+constexpr inline IP_SHARED_EXPORT ipv4_address::byte_t operator"" _b(unsigned long long ull) {
   return static_cast<ipv4_address::byte_t>(ull);
 }
 
-inline IP_SHARED_EXPORT ipv4_address operator"" _4i(unsigned long long ull) {
+constexpr inline IP_SHARED_EXPORT ipv4_address operator"" _4i(unsigned long long ull) {
   return {static_cast<ipv4_address::uint_t>(ull)};
 }
 
-inline IP_SHARED_EXPORT ipv4_address operator"" _4s(const char *s, [[maybe_unused]] size_t size) {
+constexpr inline IP_SHARED_EXPORT ipv4_address operator"" _4s(const char *s, [[maybe_unused]] size_t size) {
   return ipv4_address(s);
 }
 

@@ -1,18 +1,8 @@
-#include <info/config.h>
-#include <info/version.h>
 #include <sstream>
-
+#include <info/version.h>
 namespace info {
 
-std::string info_project_author() { return PROJECT_AUTHOR; }
-std::string info_project_repository_url() { return PROJECT_REPOSITORY_URL; }
-std::string info_project_repository_branch() { return PROJECT_REPOSITORY_BRANCH; }
-std::string info_project_revision() { return PROJECT_REVISION; }
-std::string info_project_revision_datetime() { return PROJECT_REVISION_DATETIME; }
-std::string info_project_revision_history() { return PROJECT_REVISION_HISTORY; }
-std::string info_project_version() { return PROJECT_VERSION; }
-
-std::string info_project_full() {
+std::string_view info_project_full() {
   std::stringstream ss;
   ss << "author: " << info_project_author() << std::endl;
   ss << "url: " << info_project_repository_url() << std::endl;

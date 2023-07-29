@@ -35,7 +35,7 @@ target_include_directories(
 target_sources(
     info_static
     PRIVATE
-        "src/version.cpp"
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/version.cpp
 )
 
 # define the C++ standard needed to compile this library and make it visible to dependers
