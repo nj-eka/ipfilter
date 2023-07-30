@@ -196,9 +196,16 @@ TEST(ipv4_address_test, highest) {
 TEST(ipv4_address_test, range_with) {
   using ip::operator""_b;  
   std::array<ip4::byte_t, 3> bs = {1_b, 2_b, 3_b};
-  auto [low, up] = ip4::range_with(bs, std::less{});  
-  EXPECT_TRUE(low == ip4("1.2.3.0"));
-  EXPECT_TRUE(up == ip4("1.2.3.255"));
+  {
+    auto [low, up] = ip4::range_with(bs);  
+    EXPECT_TRUE(low == ip4("1.2.3.0"));
+    EXPECT_TRUE(up == ip4("1.2.3.255"));
+  }
+  {
+    auto [low, up] = ip4::range_with(bs, std::greater<>());  
+    EXPECT_TRUE(low == ip4("1.2.3.255"));
+    EXPECT_TRUE(up == ip4("1.2.3.0"));
+  }
 }
 
 TEST(ipv4_address_test, print) {

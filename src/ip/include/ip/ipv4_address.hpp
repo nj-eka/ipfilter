@@ -141,8 +141,8 @@ public:
   static bool is_valid_format(std::string_view s) noexcept;
   constexpr static auto lowest() noexcept { return ipv4_address(0); }
   constexpr static auto highest() noexcept { return ipv4_address(std::numeric_limits<uint_t>::max()); } // = UINT32_MAX
-  template <size_t N, typename compare_t> 
-  constexpr static auto range_with(std::array<byte_t, N> const &bs, compare_t comp = std::less<ipv4_address>()) {
+  template <size_t N, typename compare_t = std::less<ipv4_address>> 
+  constexpr static auto range_with(std::array<byte_t, N> const &bs, compare_t comp = compare_t()) {
     auto low = lowest().with(bs);
     auto up = highest().with(bs);
     if constexpr(comp(lowest(), highest()))
